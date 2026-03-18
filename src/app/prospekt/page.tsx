@@ -5,6 +5,10 @@ import { motion } from "framer-motion";
 import { FileText, Sparkles, Download, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHeader from "@/components/PageHeader";
+import AddressAutocomplete, {
+  AddressSuggestion,
+} from "@/components/AddressAutocomplete";
+import NeighborhoodInfo from "@/components/NeighborhoodInfo";
 
 export default function ProspektPage() {
   const [loading, setLoading] = useState(false);
@@ -20,11 +24,21 @@ export default function ProspektPage() {
     sellerName: "",
     agentName: "",
   });
+  const [selectedAddress, setSelectedAddress] = useState<AddressSuggestion | null>(null);
   const [prospectGenerated, setProspectGenerated] = useState(false);
   const [prospectContent, setProspectContent] = useState("");
 
   const updateForm = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddressSelect = (suggestion: AddressSuggestion) => {
+    setSelectedAddress(suggestion);
+    setFormData((prev) => ({
+      ...prev,
+      address: suggestion.address,
+      city: suggestion.city,
+    }));
   };
 
   const handleGenerate = async () => {
@@ -73,12 +87,17 @@ export default function ProspektPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm text-text-secondary mb-1">Adresse</label>
-              <input
-                type="text"
+              <AddressAutocomplete
                 value={formData.address}
-                onChange={(e) => updateForm("address", e.target.value)}
-                placeholder="Strandveien 45"
-                className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors"
+                onChange={(val) => updateForm("address", val)}
+                onSelect={handleAddressSelect}
+                placeholder="Skriv inn adresse..."
+              />
+              <NeighborhoodInfo
+                address={formData.address}
+                city={formData.city}
+                municipality={selectedAddress?.municipality}
+                county={selectedAddress?.county}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -90,6 +109,7 @@ export default function ProspektPage() {
                   onChange={(e) => updateForm("city", e.target.value)}
                   placeholder="Oslo"
                   className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors"
+                  readOnly={!!selectedAddress}
                 />
               </div>
               <div>
