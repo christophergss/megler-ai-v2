@@ -16,6 +16,9 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHeader from "@/components/PageHeader";
+import AddressAutocomplete, {
+  AddressSuggestion,
+} from "@/components/AddressAutocomplete";
 
 interface PropertyItem {
   id: string;
@@ -144,6 +147,14 @@ export default function PropertiesPage() {
   const handleDelete = (id: string) => {
     setProperties((prev) => prev.filter((p) => p.id !== id));
     toast.success("Eiendom slettet");
+  };
+
+  const handleAddressSelect = (suggestion: AddressSuggestion) => {
+    setFormData((prev) => ({
+      ...prev,
+      address: suggestion.address,
+      city: suggestion.city,
+    }));
   };
 
   const updateForm = (field: string, value: string | number) => {
@@ -279,11 +290,11 @@ export default function PropertiesPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-text-secondary mb-1">Adresse</label>
-                <input
-                  type="text"
+                <AddressAutocomplete
                   value={formData.address}
-                  onChange={(e) => updateForm("address", e.target.value)}
-                  className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-text-primary focus:outline-none focus:border-accent transition-colors"
+                  onChange={(val) => updateForm("address", val)}
+                  onSelect={handleAddressSelect}
+                  placeholder="Skriv inn adresse..."
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
