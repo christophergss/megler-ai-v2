@@ -18,6 +18,7 @@ import AddressAutocomplete, {
   AddressSuggestion,
 } from "@/components/AddressAutocomplete";
 import NeighborhoodInfo from "@/components/NeighborhoodInfo";
+import PropertyImages from "@/components/PropertyImages";
 
 const textTypes = [
   { id: "salgsoppgave", label: "Salgsoppgave", desc: "Komplett salgsoppgave for eiendom" },
@@ -196,6 +197,16 @@ export default function GeneratorPage() {
                   onSelect={handleAddressSelect}
                   placeholder="Skriv inn adresse..."
                 />
+                {selectedAddress && (
+                  <div className="mt-3 rounded-lg overflow-hidden border border-border">
+                    <PropertyImages
+                      address={formData.address}
+                      city={formData.city}
+                      latitude={selectedAddress.latitude}
+                      longitude={selectedAddress.longitude}
+                    />
+                  </div>
+                )}
                 <NeighborhoodInfo
                   address={formData.address}
                   city={formData.city}

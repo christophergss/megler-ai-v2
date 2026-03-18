@@ -9,6 +9,7 @@ import AddressAutocomplete, {
   AddressSuggestion,
 } from "@/components/AddressAutocomplete";
 import NeighborhoodInfo from "@/components/NeighborhoodInfo";
+import PropertyImages from "@/components/PropertyImages";
 
 export default function ProspektPage() {
   const [loading, setLoading] = useState(false);
@@ -93,6 +94,16 @@ export default function ProspektPage() {
                 onSelect={handleAddressSelect}
                 placeholder="Skriv inn adresse..."
               />
+              {selectedAddress && (
+                <div className="mt-3 rounded-lg overflow-hidden border border-border">
+                  <PropertyImages
+                    address={formData.address}
+                    city={formData.city}
+                    latitude={selectedAddress.latitude}
+                    longitude={selectedAddress.longitude}
+                  />
+                </div>
+              )}
               <NeighborhoodInfo
                 address={formData.address}
                 city={formData.city}

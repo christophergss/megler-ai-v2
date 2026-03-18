@@ -19,6 +19,7 @@ import PageHeader from "@/components/PageHeader";
 import AddressAutocomplete, {
   AddressSuggestion,
 } from "@/components/AddressAutocomplete";
+import PropertyImages from "@/components/PropertyImages";
 
 interface PropertyItem {
   id: string;
@@ -30,6 +31,8 @@ interface PropertyItem {
   sizeSqm: number;
   price: number;
   yearBuilt: number;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 const initialProperties: PropertyItem[] = [
@@ -129,7 +132,14 @@ export default function PropertiesPage() {
     if (editingId) {
       setProperties((prev) =>
         prev.map((p) =>
-          p.id === editingId ? { ...p, ...formData } : p
+          p.id === editingId
+            ? {
+                ...p,
+                ...formData,
+                latitude: selectedCoords.lat,
+                longitude: selectedCoords.lng,
+              }
+            : p
         )
       );
       toast.success("Eiendom oppdatert!");
@@ -137,11 +147,14 @@ export default function PropertiesPage() {
       const newProperty: PropertyItem = {
         id: Date.now().toString(),
         ...formData,
+        latitude: selectedCoords.lat,
+        longitude: selectedCoords.lng,
       };
       setProperties((prev) => [...prev, newProperty]);
       toast.success("Eiendom lagt til!");
     }
     setShowModal(false);
+    setSelectedCoords({ lat: null, lng: null });
   };
 
   const handleDelete = (id: string) => {
@@ -149,12 +162,21 @@ export default function PropertiesPage() {
     toast.success("Eiendom slettet");
   };
 
+  const [selectedCoords, setSelectedCoords] = useState<{
+    lat: number | null;
+    lng: number | null;
+  }>({ lat: null, lng: null });
+
   const handleAddressSelect = (suggestion: AddressSuggestion) => {
     setFormData((prev) => ({
       ...prev,
       address: suggestion.address,
       city: suggestion.city,
     }));
+    setSelectedCoords({
+      lat: suggestion.latitude,
+      lng: suggestion.longitude,
+    });
   };
 
   const updateForm = (field: string, value: string | number) => {
@@ -200,9 +222,13 @@ export default function PropertiesPage() {
             transition={{ delay: index * 0.05 }}
             className="bg-surface border border-border rounded-xl overflow-hidden group"
           >
-            <div className="h-32 bg-gradient-to-br from-accent/20 to-surface-light flex items-center justify-center">
-              <Building2 size={40} className="text-accent/40" />
-            </div>
+            <PropertyImages
+              address={property.address}
+              city={property.city}
+              latitude={property.latitude}
+              longitude={property.longitude}
+              compact
+            />
             <div className="p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
