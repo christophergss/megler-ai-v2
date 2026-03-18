@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&display=swap');
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2A2E38 transparent;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: #0C0E12;
+  color: #F0F0F0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Instrument Serif', serif;
+}
+
+::selection {
+  background-color: rgba(196, 147, 90, 0.3);
+  color: #F0F0F0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px #161920 inset;
+  -webkit-text-fill-color: #F0F0F0;
+  caret-color: #F0F0F0;
+}
